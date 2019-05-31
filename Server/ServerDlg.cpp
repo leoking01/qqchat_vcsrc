@@ -191,7 +191,8 @@ BOOL CServerDlg::OnInitDialog()
 	 this->SetTimer(1,1000,NULL);
 //	 m_connectionList =new CPtrList();
 	 GetDlgItem(IDC_BUTTON_LEND)->EnableWindow(TRUE);
-     GetDlgItem(IDCANCEL)->EnableWindow(FALSE);
+     //GetDlgItem(IDCANCEL)->EnableWindow(FALSE);
+	      GetDlgItem(IDCANCEL)->EnableWindow(TRUE);
 
 	 GetDlgItem(IDC_BUTTON_SERVICE1)->EnableWindow(FALSE);
 	 GetDlgItem(IDC_BUTTON_SEND)->EnableWindow(FALSE);
@@ -756,10 +757,7 @@ void CServerDlg::OnButtonNew()
 			{
 				AfxMessageBox("此用户已经存在!");
 			}
-	
 	}
-	
-	
 }
 
 
