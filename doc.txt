@@ -1,0 +1,135 @@
+       计算机网络
+——课程设计报告
+ 项目名称：CHATTING ROOM
+姓名：胡鹏（0643111223）
+王瑞（0643111263）
+              2008-11-3
+流程。
+实现软件，Visual C++ 6.0.
+使用CSocket实现消息的传递。
+Before send loading infor ,Connection!and do nothing before receive success infor.
+ClientDlg                                     ServerDlg
+CListeningSocekt :pubic Csocket
+This->Listen();
+											problem:
+本打算用 CSocketFile 和 CArchive 来传递消息，用这两个对象几可以实现传递对象的可能。但是由于在实现过程中，接受方的BUFFER中无消息，一直没检查出错误。所以更改了传递消息的方式。
+直接传递CString 对象，再在这个里面来构造消息机制。
+LOAD MSG：SYSTEMMSG_LOAD_NAME_PASSWORD.
+SUCCESSLOAD: SUCCESS_CALLNAME(it’s user’s net name)
+SB online:SYSTEMMSG:CALLNAME +“进入了聊天室”；
+All online user’s name:USERSNAME_CALLNAME1_CALLNAME2_......
+DeleteConnect();
+SendMsgAll();
+User left;
+OnReceive();
+a.Analyse information’s type;
+b.Include all TYPE information Handle.
+
+2.SendMsgAll();[UserlIst]
+1.OnReceive();
+a.Analyse information’s type;
+b.Include all TYPE information Handle.
+2.SendMessage();
+A.BuildDifferent msg;
+Connection Request Imformation
+Send(LoadInformation name+psw)
+OnReceive();
+CptrList.AddTail(ClientSocket);//创建连接
+Bool Isexist();
+SuccessInfor;
+FailInfro
+DeleteConnectiong
+Chatmsg: NOMALMSG_WHO_TOWHO_MSGITEM;
+(WHO:who send      TOWHO:send to who      MSGITEM:what “who ” said)  
+USERLEFT MSG:  "SYSTEMMSG_CLOSE_"+this->m_userInforDlg->m_userName+"_" ;
+2.如果用这种方式传递消息有一个风险，假如聊天消息是与“SYSTEMMSG _开头的怎么办？”，如果知道这种消息体制后完全有可能通过传递消息就可以控制你服务器。
+解决方案：使用 CSocketFile 序列化后再传递。
+Construction MSG half-baked Code :
+CString CServerDlg::BuildUserListMsg()
+{
+	CString a;
+	a="USERLIST";
+	for(int i=0;i<m_listUser.GetCount();i++)  //Include all user’s call name!
+	{
+		CString b;
+		m_listUser.GetText(i,b);
+		a=a+"_"+b;
+	}
+	return a;
+}
+
+CString CClientDlg::BuildNomalMsg(CString& preString)// CHATTING MSG
+{
+	CString a;
+     a="NOMALMSG_"+m_userInforDlg->m_userName+"_"+this->m_comboWho+"_"+preString;
+	 return a;
+}
+
+CString CClientDlg::BulidLoadMsg()             //load msg
+{
+	CString a;
+	a="SYSTEMMSG_LOAD_"+m_userInforDlg->m_userName+"_"+m_loadDlg->m_password;
+	return a;
+}
+
+CString CClientDlg::BulidChangeMsg()
+{
+	CString a;
+	a="SYSTEMMSG_CHANGE_"+m_nameCopy+"_"+this->m_userInforDlg->m_userName;
+	return a;
+}
+
+CString CClientDlg::BulidCancelMsg()
+{
+	CString a="SYSTEMMSG_CLOSE_"+this->m_userInforDlg->m_userName+"_";
+	return a;
+}
+
+Problem:
+我们使用一个链表指针来维护用户信息，在发送消息不是同时进行！逐一实现，考虑！
+未实现同时进行。
+在发送消息时，如果是一个函数发送两条不同消息。如代码
+		if(!sf.IsEmpty())
+					{
+                        SendMsg(sf,pSocket);
+						Sleep(1000);
+						CString callNameStr=FindCallName(m_pMsg->m_systemMsg.name);
+			            CString a="系统消息(L):"+callNameStr+"  进入了聊天室!";
+				        m_listUser.AddString(callNameStr);
+                        a=AddTimeMsg(a);
+			        	m_listMsg.AddString(a);
+				        SendMsgAll(a);
+                        Sleep(1000);
+				        CString userList=BuildUserListMsg();
+				        SendMsgAll(userList);
+					}
+会发生一种情况就是前面的字符还没有读出，后面一条来了，就会两条消息当成一条来处理，目前还没有找到解决方法，暂时通过 时延（Sleep） 来避免这个问题，显然，这个方法影响登陆等过程的效率。唯一比较庆幸的是在传递聊天消息的时候不会出现这种情况，如果出现这种情况是无法接受的。
+
+CListeningSocket::OnAccept();
+FUNCTION:Just for responding connection request,and hanle it,then build a connect!
+
+CClientSocket.
+FUNCTION :For user send all type msg;
+
+CPtrList(CClientSocket *printer)
+FUNCTION:
+A list sefed all online user’s socket!
+CClientDlg;                                                      
+  CChatSocket: public CSocket.
+  CChatSocket: OnReceive()------Dlg-> OnReceive()-
+2. socket 的运用。
+3.MFC 图形界面的尝试。
+未解决问题：
+ActiveX 控键的使用问题，使用了MicroSoft Forms 2.0 listbox ,我想使用VC6.0里面的LISTBOX的方法，两者不可以兼容。而且 ActiveX  不知道是我没查找到还是它没有，感觉方法不全！
+VC使用COM里面的一些方法时使Listbox中背景图，找不到，也没成功添加Library。
+存在一个BUG 未解决： 开启服务窗口，在开始服务之前无法关闭窗口。（注意：我也添加了，OnDestroy 处理，结果还是同样问题）
+4．运行
+ （管理员登陆）
+ （用户登陆）
+  消息传递的显示
+ 消息塞选与系统消息。
+5.总结（收获）。
+（1）.深入了解了，TCP 传递消息的机制。
+（2）熟悉了MFC 大概的使用方法，但是只是最基础的，对MFC编程还存在很大的问题。
+（3）对ActiveX控键产生很大的兴趣，还有com .有意学习这个技术，并运用到萌芽基金项目上面。
+（4）对网络编程产生很大兴趣。
