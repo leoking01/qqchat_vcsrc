@@ -20,7 +20,6 @@ BEGIN_MESSAGE_MAP(CServerApp, CWinApp)
 		//    DO NOT EDIT what you see in these blocks of generated code!
 	//}}AFX_MSG
 	ON_COMMAND(ID_HELP, CWinApp::OnHelp)
-	//ON_COMMAND(ID_32775, &CServerApp::On32775_aboutApp)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -79,12 +78,3 @@ BOOL CServerApp::InitInstance()
 	//  application, rather than start the application's message pump.
 	return FALSE;
 }
-
-////#include "ServerDlg.h"
-//void CServerApp::On32775_aboutApp()
-//{
-//	// TODO: 在此添加命令处理程序代码
-//
-//	CAboutDlg  ca;
-//	ca.DoModal();
-//}
