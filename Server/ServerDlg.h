@@ -121,6 +121,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedCancel();
+	afx_msg void On32775_aboutApp();
 };
 
 //{{AFX_INSERT_LOCATION}}

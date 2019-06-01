@@ -1,5 +1,5 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
+// Microsoft Visual C++ generated include file.
 // Used by Server.rc
 //
 #define IDM_ABOUTBOX                    0x0010
@@ -23,6 +23,7 @@
 #define IDB_BITMAP_NEWUP                156
 #define IDB_BITMAP_NEWDOWN              157
 #define IDD_DIALOG2                     158
+#define IDR_MENU1_MAIN                  159
 #define IDC_LIST_USER                   1002
 #define IDC_EDIT_MSG                    1003
 #define IDC_STATIC_USER                 1012
@@ -39,13 +40,19 @@
 #define IDC_EDIT_USER                   1028
 #define IDC_EDIT_PASSWORD1              1030
 #define IDC_BUTTON_CHECK                1032
+#define ID_32771                        32771
+#define ID_32772                        32772
+#define ID_32773                        32773
+#define ID_32774                        32774
+#define ID_32775                        32775
+#define ID_32776                        32776
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        159
-#define _APS_NEXT_COMMAND_VALUE         32771
+#define _APS_NEXT_RESOURCE_VALUE        160
+#define _APS_NEXT_COMMAND_VALUE         32777
 #define _APS_NEXT_CONTROL_VALUE         1033
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

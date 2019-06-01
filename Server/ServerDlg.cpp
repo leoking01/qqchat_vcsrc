@@ -21,7 +21,6 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 // CAboutDlg dialog used for App About
-
 class CAboutDlg : public CDialog
 {
 public:
@@ -63,6 +62,9 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
 	// No message handlers
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
+
+
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CServerDlg dialog
@@ -106,6 +108,7 @@ BEGIN_MESSAGE_MAP(CServerDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_NEW, OnButtonNew)
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDCANCEL, &CServerDlg::OnBnClickedCancel)
+	ON_COMMAND(ID_32775, &CServerDlg::On32775_aboutApp)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -691,16 +694,13 @@ void CServerDlg::OnButtonNew()
 {
 	if(m_pNewUserDlg->DoModal()==IDOK)
 	{
-
 		User *p=new User();
 		p->m_loadName=m_pNewUserDlg->m_user;
 		p->m_callName=m_pNewUserDlg->m_name;
 		p->m_password=m_pNewUserDlg->m_password;
 
-
 		if(!IsExist(p))
 		{
-
 			m_pNewUserDlg->m_user.Empty();
 			m_pNewUserDlg->m_name.Empty();
 			m_pNewUserDlg->m_password.Empty();
@@ -733,7 +733,6 @@ bool CServerDlg::IsExist(User* pUser)
 		{
 			return true;
 		}
-
 	}
 	return false;
 }
@@ -772,7 +771,6 @@ CString CServerDlg::GetUserItem(CString& name,CString& password)
 			//	 AfxMessageBox("GetUserItem"+a);
 			break;
 		}
-
 	}
 	return a;
 }
@@ -787,10 +785,8 @@ CString CServerDlg::FindCallName(CString& loadName)
 		User* ppUser=(User*)m_userInforList.GetPrev(pos);
 		if( ppUser->m_loadName==loadName)
 		{
-
 			return ppUser->m_callName;
 		}
-
 	}
 	return "";
 }
@@ -809,9 +805,7 @@ void CServerDlg::DeleteAllConnect()
 		pos=m_connectionList.FindIndex(i);
 		CClientSocket* pSocket=(CClientSocket*)m_connectionList.GetPrev(pos);
 		pSocket->Close();
-
 	}
-
 	m_connectionList.RemoveAll();
 }
 
@@ -820,3 +814,12 @@ void CServerDlg::OnBnClickedCancel()
 	// TODO: 在此添加控件通知处理程序代码
 	CDialog::OnCancel();
 }
+
+
+void CServerDlg::On32775_aboutApp()
+{
+	// TODO: 在此添加命令处理程序代码
+	CAboutDlg  ca;
+	ca.DoModal();
+}
+ 
