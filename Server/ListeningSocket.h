@@ -13,30 +13,30 @@ class CServerDlg;
 class CListeningSocket : public CSocket
 {
 	//DECHARE_DYNAMIC(CListeningSocket);
-// Attributes
+	// Attributes
 public:
 	CServerDlg* m_pDlg;
 
-// Operations
+	// Operations
 public:
 	CListeningSocket();
 	CListeningSocket(CServerDlg* pDlg);
 	virtual ~CListeningSocket();
 
-// Overrides
+	// Overrides
 public:
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CListeningSocket)
-	public:
+public:
 	virtual void OnAccept(int nErrorCode);
 	//}}AFX_VIRTUAL
 
 	// Generated message map functions
 	//{{AFX_MSG(CListeningSocket)
-		// NOTE - the ClassWizard will add and remove member functions here.
+	// NOTE - the ClassWizard will add and remove member functions here.
 	//}}AFX_MSG
 
-// Implementation
+	// Implementation
 protected:
 };
 

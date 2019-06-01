@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -13,13 +13,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Chinese (P.R.C.) resources
+// 中文(简体，中国) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
-#ifdef _WIN32
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 #pragma code_page(936)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -27,18 +25,18 @@ LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE DISCARDABLE 
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE DISCARDABLE 
+2 TEXTINCLUDE 
 BEGIN
     "#include ""afxres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE DISCARDABLE 
+3 TEXTINCLUDE 
 BEGIN
     "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
     "#define _AFX_NO_OLE_RESOURCES\r\n"
@@ -66,15 +64,15 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON    DISCARDABLE     "res\\Client.ico"
+IDR_MAINFRAME           ICON                    "res\\Client.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Dialog
 //
 
-IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 55
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_ABOUTBOX DIALOG 0, 0, 235, 55
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "关于 Client"
 FONT 9, "宋体"
 BEGIN
@@ -85,29 +83,24 @@ BEGIN
 END
 
 IDD_CLIENT_DIALOG DIALOGEX 0, 0, 563, 349
-STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | 
-    WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
-CAPTION "Client"
-FONT 9, "宋体"
+CAPTION "AppClient"
+FONT 9, "宋体", 0, 0, 0x1
 BEGIN
-    LISTBOX         IDC_LIST_MSG,7,7,405,205,LBS_NOINTEGRALHEIGHT | 
-                    WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
-    LISTBOX         IDC_LIST_USER,427,43,117,169,LBS_SORT | 
-                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LISTBOX         IDC_LIST_MSG,7,7,405,205,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+    LISTBOX         IDC_LIST_USER,427,43,117,169,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
     LTEXT           "Static",IDC_STATIC_USERNUMBER,426,13,119,28
     EDITTEXT        IDC_EDIT_MSG,93,314,321,14,ES_AUTOHSCROLL
     LTEXT           "对",IDC_STATIC,13,314,10,14,SS_CENTERIMAGE
     LTEXT           "说",IDC_STATIC,79,314,13,12,SS_CENTERIMAGE
-    COMBOBOX        IDC_COMBO_WHO,29,314,48,70,CBS_DROPDOWN | CBS_SORT | 
-                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBO_WHO,29,314,48,70,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     PUSHBUTTON      "发送",IDC_BUTTON_SEND,430,314,46,15
     PUSHBUTTON      "登录",IDC_BUTTON_LOAD,431,221,45,16
     PUSHBUTTON      "注册",IDC_BUTTON_REGISTER,430,245,46,16
     PUSHBUTTON      "用户信息",IDC_BUTTON_USERINFO,494,221,51,16
     PUSHBUTTON      "修改密码",IDC_BUTTON_CHANGE,494,244,51,17
-    LISTBOX         IDC_LIST_OWN,7,220,406,72,LBS_NOINTEGRALHEIGHT | 
-                    WS_VSCROLL | WS_TABSTOP
+    LISTBOX         IDC_LIST_OWN,7,220,406,72,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
     PUSHBUTTON      "退出",IDCANCEL,494,268,51,14
     EDITTEXT        IDC_EDIT_IPADD,430,293,115,13,ES_AUTOHSCROLL
     LTEXT           "IP地址",IDC_STATIC,430,282,46,12
@@ -115,8 +108,8 @@ BEGIN
     LTEXT           "Static",IDC_STATIC_TIME,430,334,115,8
 END
 
-IDD_DIALOG1 DIALOG DISCARDABLE  0, 0, 187, 94
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_DIALOG1 DIALOG 0, 0, 187, 94
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Dialog"
 FONT 10, "System"
 BEGIN
@@ -125,12 +118,11 @@ BEGIN
     LTEXT           "用户名：",IDC_STATIC,14,19,28,11,SS_CENTERIMAGE
     LTEXT           "密码：",IDC_STATIC,22,39,22,12,SS_CENTERIMAGE
     EDITTEXT        IDC_EDIT_USER,44,19,126,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_PASSWORD,44,39,126,12,ES_PASSWORD | 
-                    ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_PASSWORD,44,39,126,12,ES_PASSWORD | ES_AUTOHSCROLL
 END
 
-IDD_DIALOG2 DIALOG DISCARDABLE  0, 0, 187, 94
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_DIALOG2 DIALOG 0, 0, 187, 94
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Dialog"
 FONT 10, "System"
 BEGIN
@@ -142,7 +134,6 @@ BEGIN
 END
 
 
-#ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
@@ -165,15 +156,13 @@ BEGIN
     BEGIN
         BLOCK "080404B0"
         BEGIN
-            VALUE "CompanyName", "\0"
-            VALUE "FileDescription", "Client Microsoft 基础类应用程序\0"
-            VALUE "FileVersion", "1, 0, 0, 1\0"
-            VALUE "InternalName", "Client\0"
-            VALUE "LegalCopyright", "版权所有 (C) 2008\0"
-            VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "Client.EXE\0"
-            VALUE "ProductName", "Client 应用程序\0"
-            VALUE "ProductVersion", "1, 0, 0, 1\0"
+            VALUE "FileDescription", "Client Microsoft 基础类应用程序"
+            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "InternalName", "Client"
+            VALUE "LegalCopyright", "版权所有 (C) 2008"
+            VALUE "OriginalFilename", "Client.EXE"
+            VALUE "ProductName", "Client 应用程序"
+            VALUE "ProductVersion", "1, 0, 0, 1"
         END
     END
     BLOCK "VarFileInfo"
@@ -182,8 +171,6 @@ BEGIN
     END
 END
 
-#endif    // !_MAC
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -191,7 +178,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO DISCARDABLE 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_ABOUTBOX, DIALOG
     BEGIN
@@ -262,13 +249,13 @@ END
 // String Table
 //
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     IDS_ABOUTBOX            "关于 Client(&A)..."
     IDP_SOCKETS_INIT_FAILED "Windows 通信端口初始化失败。"
 END
 
-#endif    // Chinese (P.R.C.) resources
+#endif    // 中文(简体，中国) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

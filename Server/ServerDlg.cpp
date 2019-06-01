@@ -27,18 +27,18 @@ class CAboutDlg : public CDialog
 public:
 	CAboutDlg();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CAboutDlg)
 	enum { IDD = IDD_ABOUTBOX };
 	//}}AFX_DATA
 
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CAboutDlg)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	//{{AFX_MSG(CAboutDlg)
 	//}}AFX_MSG
@@ -60,7 +60,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
 	//{{AFX_MSG_MAP(CAboutDlg)
-		// No message handlers
+	// No message handlers
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -81,7 +81,7 @@ void CServerDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CServerDlg)
-//	DDX_Control(pDX, IDC_BUTTON_SERVICE, m_service);
+	//	DDX_Control(pDX, IDC_BUTTON_SERVICE, m_service);
 	DDX_Control(pDX, IDC_LIST_MSG, m_listMsg);
 	DDX_Control(pDX, IDC_STATIC_TIME, m_t);
 	DDX_Control(pDX, IDC_STATIC_USER, m_peoNumber);
@@ -115,7 +115,6 @@ BOOL CServerDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-
 	// Add "About..." menu item to system menu.
 
 	// IDM_ABOUTBOX must be in the system command range.
@@ -136,26 +135,24 @@ BOOL CServerDlg::OnInitDialog()
 	if(!LoadUserInfor())
 	{ 
 		AfxMessageBox("用户信息载入失败，请检测文件user.dat是否存在？");
-	    exit(1);
+		exit(1);
 	}
 	// Set the icon for this dialog.  The framework does this automatically
 	//  when the application's main window is not a dialog
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
-
 	m_button_load.LoadBitmaps(IDB_BITMAP_UP, IDB_BITMAP_DOWN);//IDB_BITMAP1:平时；IDB_BITMAP2：按下
-    m_button_load.SubclassDlgItem(IDC_BUTTON_LEND, this);
-    m_button_load.SizeToContent();
-
+	m_button_load.SubclassDlgItem(IDC_BUTTON_LEND, this);
+	m_button_load.SizeToContent();
 
 	m_button_service.LoadBitmaps(IDB_BITMAP_SERUP, IDB_BITMAP_SERDOWN);//IDB_BITMAP1:平时；IDB_BITMAP2：按下
-    m_button_service.SubclassDlgItem(IDC_BUTTON_SERVICE1, this);
-    m_button_service.SizeToContent();
+	m_button_service.SubclassDlgItem(IDC_BUTTON_SERVICE1, this);
+	m_button_service.SizeToContent();
 
-/*	m_button_new.LoadBitmaps(IDB_BITMAP_NEWUP, IDB_BITMAP_NEWDOWN);//IDB_BITMAP1:平时；IDB_BITMAP2：按下
-    m_button_new.SubclassDlgItem(IDC_BUTTON_NEW, this);
-    m_button_new.SizeToContent();*/
+	/*	m_button_new.LoadBitmaps(IDB_BITMAP_NEWUP, IDB_BITMAP_NEWDOWN);//IDB_BITMAP1:平时；IDB_BITMAP2：按下
+	m_button_new.SubclassDlgItem(IDC_BUTTON_NEW, this);
+	m_button_new.SizeToContent();*/
 
 	m_button_send.LoadBitmaps(IDB_BITMAP_SENDUP,IDB_BITMAP_SENDDOWN);
 	m_button_send.SubclassDlgItem(IDC_BUTTON_SEND,this);
@@ -165,47 +162,43 @@ BOOL CServerDlg::OnInitDialog()
 	m_button_stop.LoadBitmaps(IDB_BITMAP_STOPUP,IDB_BITMAP_STOPDOWN);
 	m_button_stop.SubclassDlgItem(IDCANCEL,this);
 	m_button_stop.SizeToContent();
-  //m_listMsg.Set
+	//m_listMsg.Set
 
-//	m_peoNumber.SetIcon(IDI_ICON1);
+	//	m_peoNumber.SetIcon(IDI_ICON1);
 
-	
-/*	m_button_cancel.LoadBitmaps(IDB_BITMAP3, IDB_BITMAP4);//IDB_BITMAP1:平时；IDB_BITMAP2：按下
-    m_button_cancel.SubclassDlgItem(IDC_BUTTON2, this);
-    m_button_cancel.SizeToContent();*/
+	/*	m_button_cancel.LoadBitmaps(IDB_BITMAP3, IDB_BITMAP4);//IDB_BITMAP1:平时；IDB_BITMAP2：按下
+	m_button_cancel.SubclassDlgItem(IDC_BUTTON2, this);
+	m_button_cancel.SizeToContent();*/
 
-
- 
 	CBitmap bmp; 
-    bmp.LoadBitmap(IDB_BITMAP_BG); 
-    m_brBk.CreatePatternBrush(&bmp); 
-    bmp.DeleteObject(); 
+	bmp.LoadBitmap(IDB_BITMAP_BG); 
+	m_brBk.CreatePatternBrush(&bmp); 
+	bmp.DeleteObject(); 
 
+	//	dlg = new CLoadDlg();
+	m_pSocket=new CListeningSocket(this);
+	m_pNewUserDlg=new CNewUserDlg(this);
+	userNumber=0;
+	//	 CString pre="NULLMSG";
+	m_pMsg=new CMsg();
+	this->SetTimer(1,1000,NULL);
+	//	 m_connectionList =new CPtrList();
+	GetDlgItem(IDC_BUTTON_LEND)->EnableWindow(TRUE);
+	//GetDlgItem(IDCANCEL)->EnableWindow(FALSE);
+	GetDlgItem(IDCANCEL)->EnableWindow(TRUE);
 
-//	dlg = new CLoadDlg();
-	 m_pSocket=new CListeningSocket(this);
-	 m_pNewUserDlg=new CNewUserDlg(this);
-	 userNumber=0;
-//	 CString pre="NULLMSG";
-	 m_pMsg=new CMsg();
-	 this->SetTimer(1,1000,NULL);
-//	 m_connectionList =new CPtrList();
-	 GetDlgItem(IDC_BUTTON_LEND)->EnableWindow(TRUE);
-     //GetDlgItem(IDCANCEL)->EnableWindow(FALSE);
-	      GetDlgItem(IDCANCEL)->EnableWindow(TRUE);
+	GetDlgItem(IDC_BUTTON_SERVICE1)->EnableWindow(FALSE);
+	GetDlgItem(IDC_BUTTON_SEND)->EnableWindow(FALSE);
+	//GetDlgItem(IDC_BUTTON_SERVICE1)->EnableWindow(TRUE);
+	//GetDlgItem(IDC_BUTTON_SEND)->EnableWindow(TRUE );
 
-	 GetDlgItem(IDC_BUTTON_SERVICE1)->EnableWindow(FALSE);
-	 GetDlgItem(IDC_BUTTON_SEND)->EnableWindow(FALSE);
-	 //GetDlgItem(IDC_BUTTON_SERVICE1)->EnableWindow(TRUE);
-	 //GetDlgItem(IDC_BUTTON_SEND)->EnableWindow(TRUE );
-
-     GetDlgItem(IDC_LIST_MSG)->EnableWindow(FALSE);
-     GetDlgItem(IDC_LIST_USER)->EnableWindow(FALSE);
-     GetDlgItem(IDC_EDIT_MSG)->EnableWindow(FALSE);
-//	 m_pNewUserDlg->GetDlgItem(IDOK)->EnableWindow(FALSE);
-	 UpdateInfo();
+	GetDlgItem(IDC_LIST_MSG)->EnableWindow(FALSE);
+	GetDlgItem(IDC_LIST_USER)->EnableWindow(FALSE);
+	GetDlgItem(IDC_EDIT_MSG)->EnableWindow(FALSE);
+	//	 m_pNewUserDlg->GetDlgItem(IDOK)->EnableWindow(FALSE);
+	UpdateInfo();
 	// TODO: Add extra initialization here
-	
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -228,7 +221,6 @@ void CServerDlg::OnSysCommand(UINT nID, LPARAM lParam)
 
 void CServerDlg::OnPaint() 
 {
-
 	if (IsIconic())
 	{
 		CPaintDC dc(this); // device context for painting
@@ -263,7 +255,6 @@ HCURSOR CServerDlg::OnQueryDragIcon()
 
 void CServerDlg::OnCancel() 
 {
-	
 	CString systemMsg;
 	systemMsg="SERVERDOWN";
 	SendMsgAll(systemMsg);
@@ -280,42 +271,40 @@ void CServerDlg::OnButtonService1()
 	//return ;
 
 	GetDlgItem(IDCANCEL)->EnableWindow(TRUE);
-    GetDlgItem(IDC_BUTTON_SEND)->EnableWindow(TRUE);
-    GetDlgItem(IDC_LIST_MSG)->EnableWindow(TRUE);
-    GetDlgItem(IDC_LIST_USER)->EnableWindow(TRUE);
-    GetDlgItem(IDC_EDIT_MSG)->EnableWindow(TRUE);
+	GetDlgItem(IDC_BUTTON_SEND)->EnableWindow(TRUE);
+	GetDlgItem(IDC_LIST_MSG)->EnableWindow(TRUE);
+	GetDlgItem(IDC_LIST_USER)->EnableWindow(TRUE);
+	GetDlgItem(IDC_EDIT_MSG)->EnableWindow(TRUE);
 	GetDlgItem(IDC_BUTTON_SERVICE1)->EnableWindow(FALSE);
 
-   	 if(m_pSocket->Create(m_dlg->m_portNumber))
-	 {
-	      if(!m_pSocket->Listen())
-		  {
-		       AfxMessageBox("侦听失败!");
-		  }
-	 }
+	if(  m_pSocket->Create( m_dlg->m_portNumber  ) )
+	{
+		if(  !m_pSocket->Listen( )  )
+		{
+			AfxMessageBox("侦听失败!");
+		}
+	}
 }
 
 /*void CServerDlg::OnClose() 
 {
-	CDialog::OnCancel();
-	
-	CDialog::OnClose();
+CDialog::OnCancel();
+
+CDialog::OnClose();
 }*/
 
 
 
 void CServerDlg::OnAccept()
 {
-
 	CClientSocket* pSocket=new CClientSocket(this);
 	if(m_pSocket->Accept(*pSocket))
 	{
 		pSocket->Initialize();
 		m_connectionList.AddTail(pSocket);
 		userNumber++;
-		
-		UpdateInfo();
 
+		UpdateInfo();
 	}
 	else
 	{
@@ -324,18 +313,16 @@ void CServerDlg::OnAccept()
 }
 
 
-	void CServerDlg::UpdateInfo()
-	{
-		CString preText;
-		preText.Format("当前在线人数:%d",userNumber);
-		m_peoNumber.SetWindowText(preText);
-
-	}
+void CServerDlg::UpdateInfo()
+{
+	CString preText;
+	preText.Format("当前在线人数:%d",userNumber);
+	m_peoNumber.SetWindowText(preText);
+}
 
 
 void CServerDlg::OnReceive(CClientSocket* pSocket)
 {
-
 	char *pBuf=new char[1025];
 	int nBufSize=1024;
 	int nReceived;
@@ -346,15 +333,14 @@ void CServerDlg::OnReceive(CClientSocket* pSocket)
 		pBuf[nReceived]=NULL;
 		strReceived=pBuf;
 		m_pMsg->m_strText=strReceived;
-	    CString preType=m_pMsg->WhatType();
-		
-        
+		CString preType=m_pMsg->WhatType();
+
 		if(preType=="NOMALMSG")
 		{
-            m_pMsg->BuildNomal();
+			m_pMsg->BuildNomal();
 			CString a="CHAT_"+m_pMsg->m_nomalMsg.who+"_"+m_pMsg->m_nomalMsg.toWho+"_"+m_pMsg->m_nomalMsg.msgItem;
 			//a=AddTimeMsg(a);
-        	SendMsgAll(a);
+			SendMsgAll(a);
 			a=m_pMsg->m_nomalMsg.who+"  对  "+m_pMsg->m_nomalMsg.toWho+"  说 :"+m_pMsg->m_nomalMsg.msgItem;
 			a=AddTimeMsg(a);
 			m_listMsg.AddString(a);
@@ -362,56 +348,50 @@ void CServerDlg::OnReceive(CClientSocket* pSocket)
 
 		else if(preType=="SYSTEMMSG")
 		{
-            m_pMsg->BuileSystem();
+			m_pMsg->BuileSystem();
 
-			
+
 			if(m_pMsg->m_systemMsg.type=="LOAD")
 			{
 				CString sf=this->GetUserItem(m_pMsg->m_systemMsg.name,m_pMsg->m_systemMsg.msgItem);
-					if(!sf.IsEmpty())
-					{
-                        SendMsg(sf,pSocket);
-						Sleep(1000);
-						CString callNameStr=FindCallName(m_pMsg->m_systemMsg.name);
-			            CString a="系统消息(L):"+callNameStr+"  进入了聊天室!";
-				        m_listUser.AddString(callNameStr);
-                        a=AddTimeMsg(a);
-			        	m_listMsg.AddString(a);
-				        SendMsgAll(a);
-                        Sleep(1000);
-				        CString userList=BuildUserListMsg();
-				        SendMsgAll(userList);
-					}
-					else
-					{
-						CString error="FAIL_";
-						SendMsg(error,pSocket);
-						DeleteSocket(pSocket);
-
-					}
-
-				
+				if(!sf.IsEmpty())
+				{
+					SendMsg(sf,pSocket);
+					Sleep(1000);
+					CString callNameStr=FindCallName(m_pMsg->m_systemMsg.name);
+					CString a="系统消息(L):"+callNameStr+"  进入了聊天室!";
+					m_listUser.AddString(callNameStr);
+					a=AddTimeMsg(a);
+					m_listMsg.AddString(a);
+					SendMsgAll(a);
+					Sleep(1000);
+					CString userList=BuildUserListMsg();
+					SendMsgAll(userList);
+				}
+				else
+				{
+					CString error="FAIL_";
+					SendMsg(error,pSocket);
+					DeleteSocket(pSocket);
+				}
 			}
 			else if(m_pMsg->m_systemMsg.type=="CLOSE")
 			{
 				CString a="系统消息(CL)"+m_pMsg->m_systemMsg.name+"  退出了聊天室!";
 				int pos=m_listUser.FindString(0,m_pMsg->m_systemMsg.name);
 				m_listUser.DeleteString(pos);
-                
-			//	this->SendMsgAll(a);
-		//		pSocket->Close();
+
+				//	this->SendMsgAll(a);
+				//		pSocket->Close();
 				DeleteSocket(pSocket);
-			//	userNumber=m_listUser.GetCount();
-                UpdateInfo();
+				//	userNumber=m_listUser.GetCount();
+				UpdateInfo();
 				a=AddTimeMsg(a);
 				m_listMsg.AddString(a);
 				SendMsgAll(a);	
-			
-
 			}
 			else if(m_pMsg->m_systemMsg.type=="CHANGE")
 			{
- 
 				CString a="系统消息(CH)"+m_pMsg->m_systemMsg.name+"  改名为  "+m_pMsg->m_systemMsg.msgItem;
 				a=AddTimeMsg(a);
 				m_listMsg.AddString(a);
@@ -425,72 +405,63 @@ void CServerDlg::OnReceive(CClientSocket* pSocket)
 
 				CString userList=BuildUserListMsg();
 				SendMsgAll(userList);
-
 			}
 			else
 			{
 				AfxMessageBox("消息错误!");
 			}
-
-
 		}
-
-
 	}
 	else
 	{
 		AfxMessageBox("信息接受错误!");
 	}
-		delete pBuf;
-
+	delete pBuf;
 }
 
 
 
-	void CServerDlg::SendMsg(CString& strText,CClientSocket* pSocket)
+void CServerDlg::SendMsg(CString& strText,CClientSocket* pSocket)
+{
+	int nLen;
+	int nSent;
+	nLen=strText.GetLength();
+	nSent=pSocket->Send(LPCTSTR(strText),nLen);
+	if(nSent==SOCKET_ERROR)
 	{
-		int nLen;
-	    int nSent;
-		nLen=strText.GetLength();
-		nSent=pSocket->Send(LPCTSTR(strText),nLen);
-		if(nSent==SOCKET_ERROR)
-		{
-			AfxMessageBox("消息发送错误!");
-		}
+		AfxMessageBox("消息发送错误!");
+	}
 	//	m_msgEdit.Empty();
-		UpdateData(FALSE);
+	UpdateData(FALSE);
+}
 
-	}
 
-
-	void CServerDlg::SendMsgAll(CString& strText)
+void CServerDlg::SendMsgAll(CString& strText)
+{
+	POSITION pos;
+	for(int i=0;i<userNumber;i++)
 	{
-		POSITION pos;
-		for(int i=0;i<userNumber;i++)
-		{
-			
-			pos=m_connectionList.FindIndex(i);
-			CClientSocket* pSocket=(CClientSocket*)m_connectionList.GetPrev(pos);
-			SendMsg(strText,pSocket);
-			
-		}
-		m_editMsg.Empty();
+
+		pos=m_connectionList.FindIndex(i);
+		CClientSocket* pSocket=(CClientSocket*)m_connectionList.GetPrev(pos);
+		SendMsg(strText,pSocket);
 
 	}
+	m_editMsg.Empty();
+}
 
 
-	    void CServerDlg::DisplayMsg(LPCTSTR lpszMessage)
-	{
-		m_listMsg.AddString(lpszMessage);
-	}
+void CServerDlg::DisplayMsg(LPCTSTR lpszMessage)
+{
+	m_listMsg.AddString(lpszMessage);
+}
 
 
 
 void CServerDlg::OnTimer(UINT nIDEvent) 
 {
-
-   	CTime a=CTime::GetCurrentTime();
-    CString b=a.Format("%H:%M:%S");
+	CTime a=CTime::GetCurrentTime();
+	CString b=a.Format("%H:%M:%S");
 	m_t.SetWindowText(b);
 	CDialog::OnTimer(nIDEvent);
 }
@@ -499,8 +470,8 @@ void CServerDlg::OnTimer(UINT nIDEvent)
 CString CServerDlg::AddTimeMsg(CString& text)
 {
 	CTime a=CTime::GetCurrentTime();
-    CString b=a.Format("(%H:%M:%S)");
-    b=b+text;
+	CString b=a.Format("(%H:%M:%S)");
+	b=b+text;
 	return b;
 }
 
@@ -508,10 +479,8 @@ CString CServerDlg::AddTimeMsg(CString& text)
 
 CString CServerDlg::BuildSystemMsg(/*CClientSocket* pSocket,CMsg* preMsg*/)
 {
-
 	CString a("a");
 	return a;
-	
 }
 
 
@@ -522,12 +491,10 @@ bool CServerDlg::LoadUserInfor()
 	CString inforStream;
 	CString name;
 
-
 	if( m_userInforFile.Open( pFileName, CFile::modeRead | CFile::typeText ) )
 	{
 		m_userInforFile.SeekToBegin();
 
-		
 		while(m_userInforFile.ReadString(inforStream))
 		{
 
@@ -543,58 +510,54 @@ bool CServerDlg::LoadUserInfor()
 			{
 				AfxMessageBox("错误信息:"+inforStream);
 			}
-		
 		}
 		m_userInforFile.Close();
-		
+
 		return true;
 	}
 	else
 	{
 		return false;
 	}
-
 }
 
 
 
 void CServerDlg::DeleteSocket(CClientSocket* pSocket)
+{
+	pSocket->Close();
+	POSITION pos,temp;
+	for(pos=m_connectionList.GetHeadPosition();pos!=NULL;)
 	{
-		pSocket->Close();
-		POSITION pos,temp;
-		for(pos=m_connectionList.GetHeadPosition();pos!=NULL;)
+		temp=pos;
+		CClientSocket* pSock=(CClientSocket*)m_connectionList.GetNext(pos);
+		if(pSock==pSocket)
 		{
-			temp=pos;
-			CClientSocket* pSock=(CClientSocket*)m_connectionList.GetNext(pos);
-			if(pSock==pSocket)
-			{
-				m_connectionList.RemoveAt(temp);
-				userNumber--;
-				break;
-			}
-
+			m_connectionList.RemoveAt(temp);
+			userNumber--;
+			break;
 		}
-		delete pSocket;
-
 	}
+	delete pSocket;
+}
 
 HBRUSH CServerDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor) 
 {
 	HBRUSH hbr = CDialog::OnCtlColor(pDC, pWnd, nCtlColor);
 	if (pWnd == this) 
 	{ 
-      return m_brBk; 
+		return m_brBk; 
 	} 
-	
+
 	// TODO: Change any attributes of the DC here
-	
+
 	// TODO: Return a different brush if the default is not desired
 	return hbr;
 }
 
 void CServerDlg::OnButtonLend() 
 {
-		while(true)
+	while(true)
 	{
 		m_dlg=new CLoadDlg();
 		m_dlg->m_portNumber=8000;
@@ -630,42 +593,40 @@ void CServerDlg::OnButtonLend()
 			}
 			else
 			{
-                // port=dlg.m_portNumber;
-				 GetDlgItem(IDC_BUTTON_SERVICE1)->EnableWindow(TRUE);
-                 GetDlgItem(IDC_BUTTON_LEND)->EnableWindow(FALSE);
-				 break;
+				// port=dlg.m_portNumber;
+				GetDlgItem(IDC_BUTTON_SERVICE1)->EnableWindow(TRUE);
+				GetDlgItem(IDC_BUTTON_LEND)->EnableWindow(FALSE);
+				break;
 			}
 		}
 	}
-	
 }
 
 /*void CServerDlg::OnButtonService1() 
 {
-	GetDlgItem(IDCANCEL)->EnableWindow(TRUE);
-    GetDlgItem(IDC_BUTTON_SEND)->EnableWindow(TRUE);
-    GetDlgItem(IDC_LIST_MSG)->EnableWindow(TRUE);
-    GetDlgItem(IDC_LIST_USER)->EnableWindow(TRUE);
-    GetDlgItem(IDC_EDIT_MSG)->EnableWindow(TRUE);
-	GetDlgItem(IDC_BUTTON_SERVICE)->EnableWindow(FALSE);
+GetDlgItem(IDCANCEL)->EnableWindow(TRUE);
+GetDlgItem(IDC_BUTTON_SEND)->EnableWindow(TRUE);
+GetDlgItem(IDC_LIST_MSG)->EnableWindow(TRUE);
+GetDlgItem(IDC_LIST_USER)->EnableWindow(TRUE);
+GetDlgItem(IDC_EDIT_MSG)->EnableWindow(TRUE);
+GetDlgItem(IDC_BUTTON_SERVICE)->EnableWindow(FALSE);
 
-   	 if(m_pSocket->Create(m_dlg->m_portNumber))
-	 {
-	      if(!m_pSocket->Listen())
-		  {
-		       AfxMessageBox("侦听失败!");
-		 
-		  }
-	 }
-	
+if(m_pSocket->Create(m_dlg->m_portNumber))
+{
+if(!m_pSocket->Listen())
+{
+AfxMessageBox("侦听失败!");
+
+}
+}
+
 }*/
 
 void CServerDlg::OnButtonSend() 
 {
 	UpdateData(TRUE);
 
-
-   CString b=AddTimeMsg(m_editMsg);
+	CString b=AddTimeMsg(m_editMsg);
 
 	m_listMsg.AddString(b);
 	SendMsgAll(b);
@@ -676,9 +637,8 @@ void CServerDlg::OnButtonSend()
 void CServerDlg::OnDestroy() 
 {
 	CDialog::OnDestroy();
-	
+
 	// TODO: Add your message handler code here
-	
 }
 
 CString CServerDlg::BuildUserListMsg()
@@ -693,7 +653,6 @@ CString CServerDlg::BuildUserListMsg()
 
 	}
 	return a;
-
 }
 
 void CServerDlg::OnSelchangeListUser() 
@@ -723,40 +682,38 @@ bool CServerDlg::BuildUser(CString& inforStream)
 	}
 	else
 	{
-	    return false;
+		return false;
 	}
-
 }
 
 
 void CServerDlg::OnButtonNew() 
 {
-
 	if(m_pNewUserDlg->DoModal()==IDOK)
 	{
-		
-			User *p=new User();
-			p->m_loadName=m_pNewUserDlg->m_user;
-			p->m_callName=m_pNewUserDlg->m_name;
-			p->m_password=m_pNewUserDlg->m_password;
-		
 
-			if(!IsExist(p))
-			{
-			
-			    m_pNewUserDlg->m_user.Empty();
-		     	m_pNewUserDlg->m_name.Empty();
-			    m_pNewUserDlg->m_password.Empty();
-				m_pNewUserDlg->m_passwordAgain.Empty();
+		User *p=new User();
+		p->m_loadName=m_pNewUserDlg->m_user;
+		p->m_callName=m_pNewUserDlg->m_name;
+		p->m_password=m_pNewUserDlg->m_password;
+
+
+		if(!IsExist(p))
+		{
+
+			m_pNewUserDlg->m_user.Empty();
+			m_pNewUserDlg->m_name.Empty();
+			m_pNewUserDlg->m_password.Empty();
+			m_pNewUserDlg->m_passwordAgain.Empty();
 			//	m_pNewUserDlg->UpdateData(TRUE);
 			//	UpdateData(TRUE);
-				this->m_userInforList.AddTail(p);
-				AddUserItem(p);
-			}
-			else
-			{
-				AfxMessageBox("此用户已经存在!");
-			}
+			this->m_userInforList.AddTail(p);
+			AddUserItem(p);
+		}
+		else
+		{
+			AfxMessageBox("此用户已经存在!");
+		}
 	}
 }
 
@@ -776,18 +733,16 @@ bool CServerDlg::IsExist(User* pUser)
 		{
 			return true;
 		}
-			
+
 	}
 	return false;
-
 }
 
 
 bool CServerDlg::AddUserItem(User* pUser)
-
 {
 	CString pFileName("user.dat");
-	  if( m_userInforFile.Open( pFileName, CFile::modeWrite | CFile::typeText ) )
+	if( m_userInforFile.Open( pFileName, CFile::modeWrite | CFile::typeText ) )
 	{
 		m_userInforFile.SeekToEnd();
 		CString item=pUser->m_loadName+"_"+pUser->m_password+"_"+pUser->m_callName+"\n";
@@ -796,12 +751,10 @@ bool CServerDlg::AddUserItem(User* pUser)
 		m_userInforFile.Close();
 		return true;
 	}
-	  else
-	  {
-		  return false;
-	  }
-
-
+	else
+	{
+		return false;
+	}
 }
 
 
@@ -815,32 +768,32 @@ CString CServerDlg::GetUserItem(CString& name,CString& password)
 		User* ppUser=(User*)m_userInforList.GetPrev(pos);
 		if(ppUser->m_loadName==name&&ppUser->m_password==password)
 		{
-             a="SUCCESS_"+ppUser->m_callName;
-		//	 AfxMessageBox("GetUserItem"+a);
-			 break;
+			a="SUCCESS_"+ppUser->m_callName;
+			//	 AfxMessageBox("GetUserItem"+a);
+			break;
 		}
-			
+
 	}
-    return a;
+	return a;
 }
 
 
-	CString CServerDlg::FindCallName(CString& loadName)
+CString CServerDlg::FindCallName(CString& loadName)
+{
+	POSITION pos;
+	for(int i=0;i<m_userInforList.GetCount();i++)
 	{
-		POSITION pos;
-	    for(int i=0;i<m_userInforList.GetCount();i++)
+		pos=m_userInforList.FindIndex(i);
+		User* ppUser=(User*)m_userInforList.GetPrev(pos);
+		if( ppUser->m_loadName==loadName)
 		{
-		    pos=m_userInforList.FindIndex(i);
-		    User* ppUser=(User*)m_userInforList.GetPrev(pos);
-		    if( ppUser->m_loadName==loadName)
-			{
-			
-			    return ppUser->m_callName;
-			}
-			
+
+			return ppUser->m_callName;
 		}
-	    return "";
+
 	}
+	return "";
+}
 
 
 
@@ -849,14 +802,14 @@ CString CServerDlg::GetUserItem(CString& name,CString& password)
 
 void CServerDlg::DeleteAllConnect()
 {
-		POSITION pos;
-		for(int i=0;i<userNumber;i++)
+	POSITION pos;
+	for(int i=0;i<userNumber;i++)
 	{
-			
+
 		pos=m_connectionList.FindIndex(i);
 		CClientSocket* pSocket=(CClientSocket*)m_connectionList.GetPrev(pos);
 		pSocket->Close();
-			
+
 	}
 
 	m_connectionList.RemoveAll();

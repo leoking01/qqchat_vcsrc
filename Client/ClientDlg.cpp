@@ -24,18 +24,18 @@ class CAboutDlg : public CDialog
 public:
 	CAboutDlg();
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CAboutDlg)
 	enum { IDD = IDD_ABOUTBOX };
 	//}}AFX_DATA
 
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CAboutDlg)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	//{{AFX_MSG(CAboutDlg)
 	//}}AFX_MSG
@@ -57,7 +57,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
 	//{{AFX_MSG_MAP(CAboutDlg)
-		// No message handlers
+	// No message handlers
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -144,15 +144,15 @@ BOOL CClientDlg::OnInitDialog()
 	//  when the application's main window is not a dialog
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
-   
-//	CMsg a(m_editMsg);
-//	a.WhatType();
 
-	
-    m_comboTo.SetCurSel(0);
+	//	CMsg a(m_editMsg);
+	//	a.WhatType();
+
+
+	m_comboTo.SetCurSel(0);
 	m_userInforDlg=new CUserInforDlg(this);
 	this->SetTimer(1,1000,NULL);
-//	userNumber=0;
+	//	userNumber=0;
 	// TODO: Add extra initialization here
 	GetDlgItem(IDC_LIST_OWN)->EnableWindow(FALSE);
 	GetDlgItem(IDC_LIST_MSG)->EnableWindow(FALSE);
@@ -169,9 +169,9 @@ BOOL CClientDlg::OnInitDialog()
 		m_IpAddress=_T("localhost");
 	}
 
-	
 
-	
+
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -226,41 +226,36 @@ HCURSOR CClientDlg::OnQueryDragIcon()
 
 void CClientDlg::OnButtonLoad() 
 {
-
 	//while(true)
 	//{
-
-		m_loadDlg=new CLoadDlg();
-		if(m_loadDlg->DoModal()==IDOK)
+	m_loadDlg=new CLoadDlg();
+	if(m_loadDlg->DoModal()==IDOK)
+	{
+		//if(!m_loadDlg->m_user.IsEmpty())
+		m_nameCopy=m_userInforDlg->m_userName=m_loadDlg->m_user;
+		UpdateData(TRUE);
+		if(!m_loadDlg->m_user.IsEmpty())
 		{
-			//if(!m_loadDlg->m_user.IsEmpty())
-			m_nameCopy=m_userInforDlg->m_userName=m_loadDlg->m_user;
-			UpdateData(TRUE);
-			if(!m_loadDlg->m_user.IsEmpty())
+			if(ConnectSocket(m_IpAddress,8000))
 			{
-			     if(ConnectSocket(m_IpAddress,8000))
-				 {
-				    
-					CString preStr=this->BulidLoadMsg();
-					SendMsg(preStr);
-				    GetDlgItem(IDC_EDIT_IPADD)->EnableWindow(FALSE);
-		            GetDlgItem(IDOK)->EnableWindow(FALSE);
-					
-				 }
-	             else
-				 {
-		              AfxMessageBox("连接服务器失败!");
-				 }
-			}
 
+				CString preStr=this->BulidLoadMsg();
+				SendMsg(preStr);
+				GetDlgItem(IDC_EDIT_IPADD)->EnableWindow(FALSE);
+				GetDlgItem(IDOK)->EnableWindow(FALSE);
+			}
+			else
+			{
+				AfxMessageBox("连接服务器失败!");
+			}
 		}
-	
+	}
 }
 
 
 BOOL CClientDlg::ConnectSocket(LPCTSTR lpszAddress,UINT nPort)
 {
-	m_pSocket=new CChatSocket(this);
+	m_pSocket = new CChatSocket(this);
 	if(!m_pSocket->Create())
 	{
 		delete m_pSocket;
@@ -268,7 +263,7 @@ BOOL CClientDlg::ConnectSocket(LPCTSTR lpszAddress,UINT nPort)
 		AfxMessageBox("套接字错误!");
 		return FALSE;
 	}
-	while(!m_pSocket->Connect(lpszAddress,nPort))
+	while(  !m_pSocket->Connect(lpszAddress,nPort) )
 	{
 		if(AfxMessageBox("无法连接服务器!\n重新连接?",MB_YESNO)==IDNO)
 		{
@@ -276,12 +271,11 @@ BOOL CClientDlg::ConnectSocket(LPCTSTR lpszAddress,UINT nPort)
 			m_pSocket=NULL;
 			return FALSE;
 		}
-
 	}
 	return TRUE;
-
 }
 
+//发送消息
 void CClientDlg::OnButtonSend() 
 {
 	UpdateData(TRUE);
@@ -292,54 +286,48 @@ void CClientDlg::OnButtonSend()
 	}
 	else
 	{
-
-		CString preStr="我  对  "+this->m_comboWho+" 说 :"+m_editMsg;
-        preStr=AddTimeMsg(preStr);
+		CString preStr  =  "我  对  " + this->m_comboWho+" 说 :" + m_editMsg;
+		preStr=AddTimeMsg(preStr);
 		m_listOwn.AddString(preStr);
-
 
 		CString pre=BuildNomalMsg(m_editMsg);
 		SendMsg(pre);
 	}
-		
 }
 
 
 
 void CClientDlg::SendMsg(CString& strText)
 {
-
-		int nLen;
-	    int nSent;
+	int nLen;
+	int nSent;
 	//	strText=BuildNomalMsg(strText);
-		nLen=strText.GetLength();
-//	    m_editMsg=strText;
-		nSent=m_pSocket->Send(LPCTSTR(strText),nLen);
-		if(nSent!=SOCKET_ERROR)
-		{
+	nLen=strText.GetLength();
+	//	    m_editMsg=strText;
+	nSent=m_pSocket->Send(LPCTSTR(strText),nLen);
+	if(nSent!=SOCKET_ERROR)
+	{
 		//	m_listMsg.AddString(strText);
 
-			UpdateData(FALSE);
-		}
-		else
-		{
-			AfxMessageBox("消息发送错误!");
-		}
-		m_editMsg.Empty();
 		UpdateData(FALSE);
-
 	}
+	else
+	{
+		AfxMessageBox("消息发送错误!");
+	}
+	m_editMsg.Empty();
+	UpdateData(FALSE);
+}
 
 
 void CClientDlg::OnReceive(CChatSocket* pSocket)
 {
-
 	char *pBuf=new char[1025];
 	int nBufSize=1024;
 	int nReceived;
 	CString name;
 	CString strReceived;
-//	this->m_listUser.AddString("keyi"); 
+	//	this->m_listUser.AddString("keyi"); 
 	nReceived=pSocket->Receive(pBuf,nBufSize);
 
 	if(nReceived!=SOCKET_ERROR)
@@ -351,19 +339,19 @@ void CClientDlg::OnReceive(CChatSocket* pSocket)
 			m_listMsg.AddString("断开连接");
 			AfxMessageBox("与服务器断开连接");
 			GetDlgItem(IDC_LIST_OWN)->EnableWindow(FALSE);
-	        GetDlgItem(IDC_LIST_MSG)->EnableWindow(FALSE);
-	        GetDlgItem(IDC_LIST_USER)->EnableWindow(FALSE);
-	        GetDlgItem(IDC_LIST_OWN)->EnableWindow(FALSE);
-	        GetDlgItem(IDC_BUTTON_SEND)->EnableWindow(FALSE);
-	        GetDlgItem(IDC_BUTTON_USERINFO)->EnableWindow(FALSE);
-	        GetDlgItem(IDC_EDIT_MSG)->EnableWindow(FALSE);
-	        GetDlgItem(IDC_COMBO_WHO)->EnableWindow(FALSE);
-	        GetDlgItem(IDC_EDIT_IPADD)->EnableWindow(FALSE);
+			GetDlgItem(IDC_LIST_MSG)->EnableWindow(FALSE);
+			GetDlgItem(IDC_LIST_USER)->EnableWindow(FALSE);
+			GetDlgItem(IDC_LIST_OWN)->EnableWindow(FALSE);
+			GetDlgItem(IDC_BUTTON_SEND)->EnableWindow(FALSE);
+			GetDlgItem(IDC_BUTTON_USERINFO)->EnableWindow(FALSE);
+			GetDlgItem(IDC_EDIT_MSG)->EnableWindow(FALSE);
+			GetDlgItem(IDC_COMBO_WHO)->EnableWindow(FALSE);
+			GetDlgItem(IDC_EDIT_IPADD)->EnableWindow(FALSE);
 			GetDlgItem(IDC_BUTTON_LOAD)->EnableWindow(TRUE);
 			GetDlgItem(IDC_BUTTON_REGISTER)->EnableWindow(TRUE);
 			this->m_exit.SetWindowText("退出");
 		}
-        else if(IsUserLoad(strReceived))
+		else if(IsUserLoad(strReceived))
 		{
 			UpdateUserInfo();
 			UpdateData();
@@ -376,9 +364,8 @@ void CClientDlg::OnReceive(CChatSocket* pSocket)
 		}
 		else
 		{
-
 			m_listMsg.AddString(strReceived);
-		    UpdateData(FALSE);
+			UpdateData(FALSE);
 		}
 	}
 	else
@@ -388,11 +375,12 @@ void CClientDlg::OnReceive(CChatSocket* pSocket)
 	delete pBuf;
 }
 
+
 void CClientDlg::OnButtonChange() 
 {
 	AfxMessageBox("功能尚未实现");
-		
 }
+
 
 void CClientDlg::OnButtonUserinfo() 
 {
@@ -403,18 +391,15 @@ void CClientDlg::OnButtonUserinfo()
 		SendMsg(preStr);
 		this->m_nameCopy=m_userInforDlg->m_userName;
 		UpdateData(TRUE);
-
 	}
-	
-	
 }
 
 
 CString CClientDlg::BuildNomalMsg(CString& preString)
 {
 	CString a;
-     a="NOMALMSG_"+m_userInforDlg->m_userName+"_"+this->m_comboWho+"_"+preString;
-	 return a;
+	a="NOMALMSG_"+m_userInforDlg->m_userName+"_"+this->m_comboWho+"_"+preString;
+	return a;
 }
 
 CString CClientDlg::BulidLoadMsg()
@@ -442,10 +427,9 @@ void CClientDlg::OnCancel()
 	CString WindowValue;
 	m_exit.GetWindowText(WindowValue);
 
-    if(WindowValue=="下线")
+	if(WindowValue=="下线")
 	{
 		CString a=BulidCancelMsg();
-
 		SendMsg(a);
 	}
 	CDialog::OnCancel();
@@ -454,11 +438,11 @@ void CClientDlg::OnCancel()
 
 bool CClientDlg::IsUserLoad(CString& textStr)
 {
-	int begin=0;
-	int end=textStr.Find("_");
+	int begin = 0;
+	int end = textStr.Find("_");
 	CString aName;
-	CString preHead=textStr.Mid(begin,end);
-	if(preHead=="USERLIST")
+	CString preHead = textStr.Mid(begin,end);
+	if( preHead=="USERLIST"  )
 	{
 		m_listUser.ResetContent();
 		begin=end+1;
@@ -467,32 +451,27 @@ bool CClientDlg::IsUserLoad(CString& textStr)
 		{
 			if(end!=-1)
 			{
-				 
-			     aName=textStr.Mid(begin,end-begin);
-				 begin=end+1;
-				 m_listUser.AddString(aName);
-			     end=textStr.Find("_",begin);
-
+				aName = textStr.Mid(begin,end-begin);
+				begin = end+1;
+				m_listUser.AddString(aName);
+				end = textStr.Find("_",begin);
 			}
 			else
 			{
-				aName=textStr.Mid(begin);
+				aName = textStr.Mid(begin);
 				m_listUser.AddString(aName);
 				break;
 			}
 		}
-	
 		return true;
 	}
 	else
 	{
 		return false;
 	}
-
-
 }
 
-   
+
 bool CClientDlg::IsToMe(CString& text)
 {
 	int begin=0;
@@ -504,31 +483,29 @@ bool CClientDlg::IsToMe(CString& text)
 		CString toWho;
 		CString item;
 		CString msg;
-		
-		begin=end+1;
-		end=text.Find("_",begin);
-		who=text.Mid(begin,end-begin);
-		begin=end+1;
-		end=text.Find("_",begin);
-		toWho=text.Mid(begin,end-begin);
-		
-		begin=end+1;
-		item=text.Mid(begin);
-		msg=who+" 对  "+toWho+"  说 ："+item;
-        msg=AddTimeMsg(msg);
+
+		begin = end+1;
+		end =text.Find("_",begin);
+		who =text.Mid(begin,end-begin);
+		begin =end+1;
+		end =text.Find("_",begin);
+		toWho =text.Mid(begin,end-begin);
+
+		begin = end+1;
+		item = text.Mid(begin);
+		msg = who+" 对  "+toWho+"  说 ："+item;
+		msg = AddTimeMsg(msg);
 		m_listMsg.AddString(msg);
 		if(toWho==m_userInforDlg->m_userName)
 		{
 			msg=who+" 对  你  说 ："+item;
 			msg=AddTimeMsg(msg);
 			m_listOwn.AddString(msg);
-
 		}
 		return true;
 	}
 	else 
 		return false;
-
 }
 
 void CClientDlg::OnSelchangeListUser() 
@@ -536,30 +513,24 @@ void CClientDlg::OnSelchangeListUser()
 	int a=this->m_listUser.GetCurSel( ); 
 	m_listUser.GetText(a,m_userName);
 
-
-//	AfxMessageBox(m_userName);
-//	 this->m_comboTo.AddString();*/
+	//	AfxMessageBox(m_userName);
+	//	 this->m_comboTo.AddString();*/
 	if(m_userName!=m_userInforDlg->m_userName)
 	{
-	    if(m_comboTo.FindString(0,m_userName)==CB_ERR)
+		if(m_comboTo.FindString(0,m_userName)==CB_ERR)
 		{
-	         m_comboTo.AddString(m_userName);
-		     a=m_comboTo.FindString(0,m_userName);
-	         m_comboTo.SetCurSel(a);
+			m_comboTo.AddString(m_userName);
+			a=m_comboTo.FindString(0,m_userName);
+			m_comboTo.SetCurSel(a);
 		}
 	}
-
-
-
-//	AfxMessageBox(this->m_userName);
-
-    	
+	//	AfxMessageBox(this->m_userName);
 }
 
 void CClientDlg::OnTimer(UINT nIDEvent) 
 {
-    CTime a=CTime::GetCurrentTime();
-    CString b=a.Format("%H:%M:%S");
+	CTime a=CTime::GetCurrentTime();
+	CString b=a.Format("%H:%M:%S");
 	m_time.SetWindowText(b);	
 	CDialog::OnTimer(nIDEvent);
 }
@@ -568,8 +539,8 @@ void CClientDlg::OnTimer(UINT nIDEvent)
 CString CClientDlg::AddTimeMsg(CString& text)
 {
 	CTime a=CTime::GetCurrentTime();
-    CString b=a.Format("(%H:%M:%S)");
-    b=b+text;
+	CString b=a.Format("(%H:%M:%S)");
+	b=b+text;
 	return b;
 }
 
@@ -592,14 +563,14 @@ bool CClientDlg::IsMakeSure(CString& textMsg)
 	CString head=textMsg.Mid(begin,end-begin);
 	if(head=="SUCCESS")
 	{
-		begin=end+1;
+		begin = end+1;
 		CString preName=textMsg.Mid(begin);
 		this->m_userInforDlg->m_userName=preName;
 		this->m_userInforDlg->m_userCopy=preName;
 		GetDlgItem(IDC_BUTTON_SEND)->EnableWindow(TRUE);
-	    GetDlgItem(IDC_BUTTON_USERINFO)->EnableWindow(TRUE);
-	    GetDlgItem(IDC_EDIT_MSG)->EnableWindow(TRUE);
-	    GetDlgItem(IDC_COMBO_WHO)->EnableWindow(TRUE);
+		GetDlgItem(IDC_BUTTON_USERINFO)->EnableWindow(TRUE);
+		GetDlgItem(IDC_EDIT_MSG)->EnableWindow(TRUE);
+		GetDlgItem(IDC_COMBO_WHO)->EnableWindow(TRUE);
 		GetDlgItem(IDC_LIST_USER)->EnableWindow(TRUE);
 		GetDlgItem(IDC_BUTTON_LOAD)->EnableWindow(FALSE);
 		GetDlgItem(IDC_BUTTON_REGISTER)->EnableWindow(FALSE);
@@ -607,14 +578,12 @@ bool CClientDlg::IsMakeSure(CString& textMsg)
 		UpdateUserInfo();
 		return true;
 	}
-	else if(head=="FAIL")
+	else if( head=="FAIL"  )
 	{
-		AfxMessageBox("登陆失败");
-			return true;
+		AfxMessageBox("登陆失败");  
+		return true;
 	}
-
 	return false;
-
 }
 
 void CClientDlg::OnOK() 
@@ -634,18 +603,13 @@ void CClientDlg::OnOK()
 			m_IpAddress=m_ipAddress;
 			GetDlgItem(IDC_EDIT_IPADD)->EnableWindow(FALSE);
 			m_ok.SetWindowText("更改IP");
-
 		}
 		else
 		{
 			AfxMessageBox("请输入正确的IP格式");
 		}
-		
-		
-
 	}
-	
-//	CDialog::OnOK();
+	//	CDialog::OnOK();
 }
 
 
@@ -672,31 +636,22 @@ bool CClientDlg::CheckId(CString& preIp)
 
 	seg4=preIp.Mid(begin);
 
-
 	if((!seg1.IsEmpty())&&
-	   (!seg2.IsEmpty())&&
-	   (!seg3.IsEmpty())&&
-	   (!seg4.IsEmpty()))
-	 {
-
+		(!seg2.IsEmpty())&&
+		(!seg3.IsEmpty())&&
+		(!seg4.IsEmpty()))
+	{
 		if(IsNumberOfIp(seg1)&&
-		   IsNumberOfIp(seg2)&&
-		   IsNumberOfIp(seg3)&&
-		   IsNumberOfIp(seg4)
+			IsNumberOfIp(seg2)&&
+			IsNumberOfIp(seg3)&&
+			IsNumberOfIp(seg4)
 			)
 		{
 			return true;
 		}
-		
-
 	}
 	return false;
 }
-
-
-
-
-
 
 
 
@@ -705,20 +660,18 @@ bool CClientDlg::IsNumberOfIp(CString ipSeg)
 	int size=ipSeg.GetLength();
 	char *segChar;
 	if(size>0&&size<=3)
-	 {
+	{
 		segChar=new char[size];
-	     for(int i=0;i<size;i++)
-	    {
-	       segChar[i]=ipSeg[i];
-	    }
-	    int number=atoi(segChar);
-	    if(!(number>=0&&number<=255))
-	    {
-		    return false;
-    
-	    }
+		for(int i=0;i<size;i++)
+		{
+			segChar[i]=ipSeg[i];
+		}
+		int number=atoi(segChar);
+		if(!(number>=0&&number<=255))
+		{
+			return false;
+		}
 	}
 	delete segChar;
 	return true;
-
 }
