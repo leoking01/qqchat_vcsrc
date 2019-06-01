@@ -53,17 +53,15 @@ END_MESSAGE_MAP()
 void CNewUserDlg::OnButtonCheck() 
 {
 	this->UpdateData(TRUE);
-	if( (!this->m_name.IsEmpty())
-	&&  (!this->m_password.IsEmpty())
-	&&  (!this->m_passwordAgain.IsEmpty())
-	&&  (!this->m_user.IsEmpty())
-	&&(this->m_password==this->m_passwordAgain))
+	if( ( !this->m_name.IsEmpty() )
+		&&  (!this->m_password.IsEmpty( ) )
+		&&  (!this->m_passwordAgain.IsEmpty() )
+		&&  (!this->m_user.IsEmpty( ) )
+		&&  (this->m_password==this->m_passwordAgain )
+		)
 	{
 		GetDlgItem(IDOK)->EnableWindow(TRUE);
-
 	}
-
-	
 }
 
 void CNewUserDlg::OnOK() 
