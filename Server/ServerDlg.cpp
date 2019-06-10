@@ -324,7 +324,6 @@ void CServerDlg::OnButtonService1()
 	if( !check_statusOfLogIn(  errorStr ) )
 	{
 		//AfxMessageBox( errorStr,MB_YESNO);
-
 		if(errorStr!="")
 		{
 			if(AfxMessageBox(errorStr,MB_YESNO)==IDNO)
@@ -342,8 +341,6 @@ void CServerDlg::OnButtonService1()
 			}
 			//break;
 		}
-
-
 		return  ;
 	}
 
