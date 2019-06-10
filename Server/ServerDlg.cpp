@@ -187,17 +187,23 @@ BOOL CServerDlg::OnInitDialog()
 	//GetDlgItem(IDCANCEL)->EnableWindow(FALSE);
 	GetDlgItem(IDCANCEL)->EnableWindow(TRUE);
 
-	GetDlgItem(IDC_BUTTON_SERVICE1)->EnableWindow(FALSE);
-	GetDlgItem(IDC_BUTTON_SEND)->EnableWindow(FALSE);
-	//GetDlgItem(IDC_BUTTON_SERVICE1)->EnableWindow(TRUE);
-	//GetDlgItem(IDC_BUTTON_SEND)->EnableWindow(TRUE );
+	if( 0 )
+	{
+		GetDlgItem(IDC_BUTTON_SERVICE1)->EnableWindow(FALSE);
+		GetDlgItem(IDC_BUTTON_SEND)->EnableWindow(FALSE);
+		//GetDlgItem(IDC_BUTTON_SERVICE1)->EnableWindow(TRUE);
+		//GetDlgItem(IDC_BUTTON_SEND)->EnableWindow(TRUE );
 
-	GetDlgItem(IDC_LIST_MSG)->EnableWindow(FALSE);
-	GetDlgItem(IDC_LIST_USER)->EnableWindow(FALSE);
-	GetDlgItem(IDC_EDIT_MSG)->EnableWindow(FALSE);
-	//	 m_pNewUserDlg->GetDlgItem(IDOK)->EnableWindow(FALSE);
+		GetDlgItem(IDC_LIST_MSG)->EnableWindow(FALSE);
+		GetDlgItem(IDC_LIST_USER)->EnableWindow(FALSE);
+		GetDlgItem(IDC_EDIT_MSG)->EnableWindow(FALSE);
+		//	 m_pNewUserDlg->GetDlgItem(IDOK)->EnableWindow(FALSE);
+	}
+
 	UpdateInfo();
 	// TODO: Add extra initialization here
+
+	statusOfSocketBeCreated = FALSE;
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -263,37 +269,115 @@ void CServerDlg::OnCancel()
 }
 
 
+bool CServerDlg::check_statusOfLogIn(  CString &errorStr ) 
+{
+	//bool checkStatus = true;
+	
+	//if(  checkStatus )
+	{
+		//CString errorStr=_T("");
+		if(m_dlg->m_portNumber<8000)
+		{
+			errorStr="未登录。输入端口号不小于8000\n";
 
+			//AfxMessageBox(errorStr,MB_YESNO);
+			return false;
+		}
+		if(m_dlg->m_portNumber>9000)
+		{
+			errorStr="未登录。输入端口号不大于9000\n";
+
+			//AfxMessageBox(errorStr,MB_YESNO);
+			return false;
+		}
+		if(m_dlg->m_editName!="Administrator")
+		{
+			errorStr=errorStr+"未登录。用户名错误！\n";
+
+			//AfxMessageBox(errorStr,MB_YESNO);
+			return false;
+		}
+		if(m_dlg->m_editPassword!="1988822")
+		{
+			errorStr=errorStr+"未登录。密码错误\n";
+
+			//AfxMessageBox(errorStr,MB_YESNO);
+			return false;
+		}
+
+	}
+	return true;
+}
+
+
+
+//启动服务
 void CServerDlg::OnButtonService1() 
 {
+	if( !m_dlg )
+	{
+		AfxMessageBox("未登录。");
+		return ;
+	}
+	//bool checkStatus = true;
+	CString errorStr ;
+	if( !check_statusOfLogIn(  errorStr ) )
+	{
+		//AfxMessageBox( errorStr,MB_YESNO);
+
+		if(errorStr!="")
+		{
+			if(AfxMessageBox(errorStr,MB_YESNO)==IDNO)
+			{
+				//break;
+			}
+		}
+		else
+		{
+			// port=dlg.m_portNumber;
+			if( false )
+			{
+				GetDlgItem(IDC_BUTTON_SERVICE1)->EnableWindow(TRUE);
+				GetDlgItem(IDC_BUTTON_LEND)->EnableWindow(FALSE);
+			}
+			//break;
+		}
+
+
+		return  ;
+	}
+
 	AfxMessageBox( _T("点击了开始服务的按钮。侦听开始!" ) ) ;
-	//AfxMessageBox("侦听开始!");
-	//return ;
 
 	GetDlgItem(IDCANCEL)->EnableWindow(TRUE);
 	GetDlgItem(IDC_BUTTON_SEND)->EnableWindow(TRUE);
 	GetDlgItem(IDC_LIST_MSG)->EnableWindow(TRUE);
 	GetDlgItem(IDC_LIST_USER)->EnableWindow(TRUE);
 	GetDlgItem(IDC_EDIT_MSG)->EnableWindow(TRUE);
-	GetDlgItem(IDC_BUTTON_SERVICE1)->EnableWindow(FALSE);
 
-	if(  m_pSocket->Create( m_dlg->m_portNumber  ) )
+	if(0 )
+		GetDlgItem(IDC_BUTTON_SERVICE1)->EnableWindow(FALSE);
+
+	if( statusOfSocketBeCreated )
+	{
+		AfxMessageBox("socket已经被创建。");
+		return ;
+	}
+
+	statusOfSocketBeCreated =   m_pSocket->Create( m_dlg->m_portNumber  ) ;
+
+	if(  statusOfSocketBeCreated  )
 	{
 		if(  !m_pSocket->Listen( )  )
 		{
 			AfxMessageBox("侦听失败!");
 		}
+		else
+		{
+			AfxMessageBox("侦听成功!");
+		}
 	}
 }
-
-/*void CServerDlg::OnClose() 
-{
-CDialog::OnCancel();
-
-CDialog::OnClose();
-}*/
-
-
 
 void CServerDlg::OnAccept()
 {
@@ -321,6 +405,7 @@ void CServerDlg::UpdateInfo()
 }
 
 
+//接收客户端的信息
 void CServerDlg::OnReceive(CClientSocket* pSocket)
 {
 	char *pBuf=new char[1025];
@@ -484,7 +569,7 @@ CString CServerDlg::BuildSystemMsg(/*CClientSocket* pSocket,CMsg* preMsg*/)
 }
 
 
-
+//下载用户信息
 bool CServerDlg::LoadUserInfor()
 {
 	CString pFileName("user.dat");
@@ -497,7 +582,6 @@ bool CServerDlg::LoadUserInfor()
 
 		while(m_userInforFile.ReadString(inforStream))
 		{
-
 			if(BuildUser(inforStream))
 			{
 				User *pUser=new User();
@@ -555,49 +639,73 @@ HBRUSH CServerDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	return hbr;
 }
 
+
+// 后台管理员登陆
 void CServerDlg::OnButtonLend() 
 {
-	while(true)
+	//while(true)
+	if(true)
 	{
 		m_dlg=new CLoadDlg();
 		m_dlg->m_portNumber=8000;
 		m_dlg->m_editName="Administrator";
 		m_dlg->m_editPassword="1988822";
 		UpdateData(TRUE);
-		if(m_dlg->DoModal()==IDOK)
+
+		INT_PTR  res_dlg = m_dlg->DoModal() ;
+		if(  res_dlg ==IDOK)
 		{
-			CString errorStr=_T("");
-			if(m_dlg->m_portNumber<8000)
+			CString  errorStr;
+			if( !check_statusOfLogIn( errorStr ) )
 			{
-				errorStr="输入端口号不小于8000\n";
+				AfxMessageBox( "未登录",MB_YESNO);
+				return  ;
 			}
-			else if(m_dlg->m_portNumber>9000)
-			{
-				errorStr="输入端口号不大于9000\n";
-			}
-			if(m_dlg->m_editName!="Administrator")
-			{
-				errorStr=errorStr+"用户名错误！\n";
-			}
-			if(m_dlg->m_editPassword!="1988822")
-			{
-				errorStr=errorStr+"密码错误\n";
-			}
+
+
+			//CString errorStr=_T("");
+			//if(m_dlg->m_portNumber<8000)
+			//{
+			//	errorStr="输入端口号不小于8000\n";
+			//}
+			//else if(m_dlg->m_portNumber>9000)
+			//{
+			//	errorStr="输入端口号不大于9000\n";
+			//}
+			//if(m_dlg->m_editName!="Administrator")
+			//{
+			//	errorStr=errorStr+"用户名错误！\n";
+			//}
+			//if(m_dlg->m_editPassword!="1988822")
+			//{
+			//	errorStr=errorStr+"密码错误\n";
+			//}
 
 			if(errorStr!="")
 			{
 				if(AfxMessageBox(errorStr,MB_YESNO)==IDNO)
 				{
-					break;
+					//break;
 				}
 			}
 			else
 			{
 				// port=dlg.m_portNumber;
-				GetDlgItem(IDC_BUTTON_SERVICE1)->EnableWindow(TRUE);
-				GetDlgItem(IDC_BUTTON_LEND)->EnableWindow(FALSE);
-				break;
+				if( false )
+				{
+					GetDlgItem(IDC_BUTTON_SERVICE1)->EnableWindow(TRUE);
+					GetDlgItem(IDC_BUTTON_LEND)->EnableWindow(FALSE);
+				}
+				//break;
 			}
+		}
+		else if( res_dlg==IDCANCEL   )
+		{
+			m_dlg->m_portNumber=-1;
+			m_dlg->m_editName="";
+			m_dlg->m_editPassword="";
+			delete m_dlg;
+			AfxMessageBox("取消登陆。");
 		}
 	}
 }
@@ -687,20 +795,18 @@ bool CServerDlg::BuildUser(CString& inforStream)
 }
 
 
+//用户注册
 void CServerDlg::OnButtonNew() 
 {
 	if(m_pNewUserDlg->DoModal()==IDOK)
 	{
-
 		User *p=new User();
 		p->m_loadName=m_pNewUserDlg->m_user;
 		p->m_callName=m_pNewUserDlg->m_name;
 		p->m_password=m_pNewUserDlg->m_password;
 
-
 		if(!IsExist(p))
 		{
-
 			m_pNewUserDlg->m_user.Empty();
 			m_pNewUserDlg->m_name.Empty();
 			m_pNewUserDlg->m_password.Empty();
@@ -733,7 +839,6 @@ bool CServerDlg::IsExist(User* pUser)
 		{
 			return true;
 		}
-
 	}
 	return false;
 }
@@ -772,7 +877,6 @@ CString CServerDlg::GetUserItem(CString& name,CString& password)
 			//	 AfxMessageBox("GetUserItem"+a);
 			break;
 		}
-
 	}
 	return a;
 }
@@ -787,18 +891,11 @@ CString CServerDlg::FindCallName(CString& loadName)
 		User* ppUser=(User*)m_userInforList.GetPrev(pos);
 		if( ppUser->m_loadName==loadName)
 		{
-
 			return ppUser->m_callName;
 		}
-
 	}
 	return "";
 }
-
-
-
-
-
 
 void CServerDlg::DeleteAllConnect()
 {
@@ -820,3 +917,5 @@ void CServerDlg::OnBnClickedCancel()
 	// TODO: 在此添加控件通知处理程序代码
 	CDialog::OnCancel();
 }
+
+

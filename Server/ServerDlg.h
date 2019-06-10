@@ -31,7 +31,7 @@ struct User
 };
 class CServerDlg : public CDialog
 {
-// Construction
+	// Construction
 public:
 	CServerDlg(CWnd* pParent = NULL);	// standard constructor
 
@@ -46,9 +46,11 @@ public:
 	CBitmapButton m_button_service;
 	CBitmapButton m_button_stop;
 	CBitmapButton m_button_send;
-//	CBitmapButton m_button_new;
+	//	CBitmapButton m_button_new;
 
-//	CBitmapButton m_button_cancel;
+	BOOL   statusOfSocketBeCreated;
+
+	//	CBitmapButton m_button_cancel;
 	CBrush m_brBk;
 	CStdioFile m_userInforFile;
 	User m_pUser;
@@ -64,7 +66,7 @@ public:
 	CString AddTimeMsg(CString& text);
 	CString BuildSystemMsg();
 	bool LoadUserInfor();
-    bool BuildUser(CString& inforStream);
+	bool BuildUser(CString& inforStream);
 
 	void DeleteSocket(CClientSocket* pSocket);
 	CString BuildUserListMsg();
@@ -73,11 +75,11 @@ public:
 	bool AddUserItem(User* pUser);
 	CString FindCallName(CString& loadName);
 
-    CString GetUserItem(CString& name,CString& password);
+	CString GetUserItem(CString& name,CString& password);
 	void DeleteAllConnect();
-//	bool LoadUserInfor
+	//	bool LoadUserInfor
 
-// Dialog Data
+	// Dialog Data
 	//{{AFX_DATA(CServerDlg)
 	enum { IDD = IDD_SERVER_DIALOG };
 
@@ -92,15 +94,15 @@ public:
 
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CServerDlg)
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 	//}}AFX_VIRTUAL
 
-// Implementation
+	// Implementation
 protected:
 	HICON m_hIcon;
 
-	
+
 
 	// Generated message map functions
 	//{{AFX_MSG(CServerDlg)
@@ -121,6 +123,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedCancel();
+
+	bool CServerDlg::check_statusOfLogIn(  CString &errorStr ) ;
 };
 
 //{{AFX_INSERT_LOCATION}}
